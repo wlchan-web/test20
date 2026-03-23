@@ -13,12 +13,53 @@ export default function Home() {
   const [chatLog, setChatLog] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 🌟 進階版：自動壓縮圖片 Function
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
-    reader.onloadend = () => setImage(reader.result);
     reader.readAsDataURL(file);
+    
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      
+      img.onload = () => {
+        // 1. 設定最大尺寸 (800px 對 AI 睇數學題已經超級夠清，又極度慳位)
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        // 2. 計返個黃金比例，確保縮細後唔會變形
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        // 3. 開張「隱形畫布」重新畫過張相
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // 4. 將畫布轉返做 Base64 代碼！
+        // 用 "image/jpeg" 格式，第二個數字 0.7 代表保留 70% 畫質 (檔案大小會暴跌 90%!)
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        
+        // 5. 將減肥成功嘅相放入系統準備寄出
+        setImage(compressedBase64);
+      };
+    };
   };
 
   const sendMessage = async () => {
@@ -39,10 +80,12 @@ export default function Home() {
         body: JSON.stringify({ 
           message: currentInput, 
           image: currentImage,
-          // 🌟 關鍵改動：淨係寄出最後 6 句對話（即係最近 3 次問答），舊嘅由佢留喺畫面，但唔會嘥算力傳畀 AI
-          history: chatLog.slice(-6) 
+          // 🌟 瘦身秘訣：淨係抽 role 同 text 出嚟寄，唔寄舊嘅 img！
+          history: chatLog.slice(-6).map(msg => ({ 
+            role: msg.role, 
+            text: msg.text 
+          })) 
         })
-      });
       
       const data = await res.json();
       
