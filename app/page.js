@@ -80,12 +80,12 @@ export default function Home() {
         body: JSON.stringify({ 
           message: currentInput, 
           image: currentImage,
-          // 🌟 瘦身秘訣：淨係抽 role 同 text 出嚟寄，唔寄舊嘅 img！
           history: chatLog.slice(-6).map(msg => ({ 
             role: msg.role, 
             text: msg.text 
           })) 
         })
+      }); // 🌟 關鍵：就係爭咗呢個 `);` 嚟完美閂門！
       
       const data = await res.json();
       
