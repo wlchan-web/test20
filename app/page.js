@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import remarkGfm from 'remark-gfm'; // 🌟 新增：表格翻譯糕
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -235,11 +236,17 @@ const [isLoading, setIsLoading] = useState(false);
               ) : (
                 <div style={{ wordBreak: "break-word", lineHeight: "1.6" }}>
                   <ReactMarkdown 
-                    remarkPlugins={[remarkMath]} 
-                    rehypePlugins={[rehypeKatex]}
-                  >
-                    {msg.text}
-                  </ReactMarkdown>
+                  remarkPlugins={[remarkMath, remarkGfm]} // 🌟 放入 remarkGfm
+                  rehypePlugins={[rehypeKatex]}
+                  // 🌟 新增 components：教佢點樣畫個靚靚表格
+                  components={{
+                    table: ({node, ...props}) => <table style={{ borderCollapse: "collapse", width: "100%", margin: "10px 0" }} {...props} />,
+                    th: ({node, ...props}) => <th style={{ border: "1px solid #ccc", padding: "8px", backgroundColor: "#007bff", color: "white", textAlign: "left" }} {...props} />,
+                    td: ({node, ...props}) => <td style={{ border: "1px solid #ccc", padding: "8px", backgroundColor: "white", color: "black" }} {...props} />
+                  }}
+                >
+                  {msg.text}
+                </ReactMarkdown>
                 </div>
               )}
             </span>
