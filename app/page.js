@@ -1,35 +1,41 @@
 "use client";
-import { useState, useEffect } from 'react'; // 🌟 加入 useEffect
-
-// 🌟 新增嘅法寶：引入 Markdown 同 數學公式翻譯器
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import 'katex/dist/katex.min.css'; // 🌟 呢行好重要！係數學公式嘅字體樣式表
+import 'katex/dist/katex.min.css';
 
 export default function Home() {
   const [input, setInput] = useState("");
   const [image, setImage] = useState(null);
-  const [chatLog, setChatLog] = useState([]);
+  
+  // 🌟 修改 1：預設直接放入陳 Sir 嘅開場白，唔好留空
+  const [chatLog, setChatLog] = useState([
+    { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
+  ]);
+  
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false); // 🌟 新增：用嚟記住「讀取舊記憶」搞掂未
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // 🌟 法寶 1：網頁一打開，即刻去 LocalStorage 摷返舊記憶出嚟
+  // 🌟 修改 2：讀取記憶 (防洗腦加固版)
   useEffect(() => {
     const savedChat = localStorage.getItem('chanSirChatLog');
-    if (savedChat) {
-      try {
-        setChatLog(JSON.parse(savedChat));
-      } catch (error) {
-        console.error("讀取記憶失敗", error);
-      }
+    
+    // 確保搵到記憶，而且唔係得個空殼，先至載入
+    if (savedChat && savedChat !== "[]") {
+      setChatLog(JSON.parse(savedChat));
     }
-    setIsLoaded(true); // 話畀系統知：舊記憶已經讀取完畢！
+    
+    // 🌟 關鍵神兵利器：等 0.1 秒，確保所有舊對話「坐定定」喺畫面，先至解鎖儲存功能！
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
   }, []);
 
-  // 🌟 法寶 2：每次 chatLog 有更新（阿 Sir 答完或者學生問完），即刻自動 Save 落 LocalStorage
+  // 🌟 修改 3：儲存記憶 (加固版)
   useEffect(() => {
-    if (isLoaded) { // 確保讀取完舊記憶先好 Save，防止一開網頁就洗走咗啲舊資料
+    // 必須等 isLoaded 解鎖 (即係 0.1 秒後)，先准 Save！防白撞！
+    if (isLoaded) {
       localStorage.setItem('chanSirChatLog', JSON.stringify(chatLog));
     }
   }, [chatLog, isLoaded]);
