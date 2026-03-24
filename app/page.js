@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // 🌟 加入 useRef
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -14,8 +14,12 @@ export default function Home() {
     { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
   ]);
   
-  const [isLoading, setIsLoading] = useState(false);
+const [isLoading, setIsLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  // 🌟 新增：用語音發問嘅狀態同法寶
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   // 🌟 修改 2：讀取記憶 (防洗腦加固版)
   useEffect(() => {
@@ -40,6 +44,46 @@ export default function Home() {
     }
   }, [chatLog, isLoaded]);
 
+  // 🎙️ 語音發問 Function
+  const toggleListening = () => {
+    if (isListening) {
+      // 如果聽緊，撳多吓就即刻停
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    // 檢查瀏覽器有冇內置語音功能 (Chrome / Safari 通常都有)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("阿 Sir 提提你：你嘅瀏覽器暫時唔支援語音輸入，請轉用最新版 Chrome 或者 Safari 試吓啦！");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'zh-HK'; // 🌟 核心靈魂：設定做廣東話！
+    recognition.continuous = false; // 講完一句就會自動停
+    recognition.interimResults = false;
+
+    recognition.onstart = () => setIsListening(true);
+    
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      // 將講完嘅字，自動加落輸入框度
+      setInput(prev => prev + (prev ? " " : "") + transcript); 
+    };
+    
+    recognition.onerror = (event) => {
+      console.error("聽唔清楚：", event.error);
+      setIsListening(false);
+    };
+    
+    recognition.onend = () => setIsListening(false);
+
+    recognitionRef.current = recognition;
+    recognition.start(); // 啟動咪高峰！
+  };
+  
   // 🌟 進階版：自動壓縮圖片 Function
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -192,9 +236,32 @@ export default function Home() {
             value={input} 
             onChange={(e) => setInput(e.target.value)} 
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder="輸入問題，按 Enter 發送..." 
-            style={{ flex: 1, padding: "12px", borderRadius: "6px", border: "1px solid #ccc", fontSize: "16px" }} 
+            placeholder="輸入問題，或者撳咪高峰講嘢..." 
+            style={{ flex: 1, padding: "12px", borderRadius: "6px", border: "1px solid #ccc", fontSize: "16px", color: "black", backgroundColor: "white" }} 
           />
+          
+          {/* 🎙️ 語音發問按鈕 */}
+          <button 
+            type="button"
+            onClick={toggleListening}
+            style={{
+              padding: "12px",
+              backgroundColor: isListening ? "#dc3545" : "#f8f9fa", // 聽緊嗰陣會變紅色警告
+              color: isListening ? "white" : "#333",
+              border: "1px solid #ccc",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0
+            }}
+            title="用語音發問"
+          >
+            {isListening ? "🛑 聽緊..." : "🎙️"}
+          </button>
+
           <button onClick={sendMessage} disabled={isLoading} style={{ padding: "12px 24px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "6px", cursor: isLoading ? "not-allowed" : "pointer", fontWeight: "bold", fontSize: "16px" }}>
             發送
           </button>
