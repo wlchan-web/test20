@@ -107,12 +107,20 @@ export default function Home() {
         body: JSON.stringify({ 
           message: currentInput, 
           image: currentImage,
-          history: chatLog.slice(-6).map(msg => ({ 
-            role: msg.role, 
-            text: msg.text 
-          })) 
+          // 🌟 終極防 Error 寫法：過濾對話紀錄
+          history: chatLog
+            .slice(-6) // 攞最後 6 句
+            .filter((msg, index, array) => {
+              // 如果成條 List 嘅第一句係 AI (model) 講嘅，就飛走佢，確保由 User 開頭！
+              if (index === 0 && msg.role === "ai") return false; 
+              return true;
+            })
+            .map(msg => ({ 
+              role: msg.role, 
+              text: msg.text 
+            })) 
         })
-      }); // 🌟 關鍵：就係爭咗呢個 `);` 嚟完美閂門！
+      });
       
       const data = await res.json();
       
