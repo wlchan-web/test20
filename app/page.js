@@ -163,6 +163,23 @@ export default function Home() {
           <button onClick={sendMessage} disabled={isLoading} style={{ padding: "12px 24px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "6px", cursor: isLoading ? "not-allowed" : "pointer", fontWeight: "bold", fontSize: "16px" }}>
             發送
           </button>
+          {/* 🧹 重新開課按鈕 (紅色，以防撳錯) */}
+          <button 
+            onClick={resetChat} 
+            style={{ 
+              padding: "12px 16px", 
+              marginLeft: "8px", 
+              backgroundColor: "#ff4d4f", // 醒目嘅紅色
+              color: "white", 
+              border: "none", 
+              borderRadius: "6px", 
+              cursor: "pointer",
+              fontWeight: "bold",
+              flexShrink: 0
+            }}
+          >
+            🧹 重新開課
+          </button>
         </div>
       </div>
     </div>
