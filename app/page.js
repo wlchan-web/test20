@@ -9,6 +9,10 @@ import remarkGfm from 'remark-gfm'; // 🌟 新增：表格翻譯糕
 export default function Home() {
   const [input, setInput] = useState("");
   const [image, setImage] = useState(null);
+  // 🔇 新增：強制停止發聲功能
+  const stopSpeech = () => {
+    window.speechSynthesis.cancel(); // 呢句就係叫瀏覽器即刻停把聲
+  };
   
   // 🌟 修改 1：預設直接放入陳 Sir 嘅開場白，唔好留空
   const [chatLog, setChatLog] = useState([
@@ -325,6 +329,29 @@ const [isLoading, setIsLoading] = useState(false);
             }}
           >
             🧹 重新開課
+          </button>
+          {/* 呢個係你原本嘅發送掣 */}
+          <button 
+            onClick={sendMessage} 
+            // ...你原本嘅 style...
+          >
+            發送
+          </button>
+
+          {/* 🔇 新增：叫陳 Sir 收聲掣 */}
+          <button 
+            onClick={stopSpeech} 
+            style={{ 
+              padding: "10px", 
+              backgroundColor: "#ff4d4f", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "5px", 
+              marginLeft: "10px",
+              cursor: "pointer"
+            }}
+          >
+            🔇 暫停發聲
           </button>
         </div>
       </div>
