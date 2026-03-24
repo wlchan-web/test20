@@ -190,7 +190,7 @@ export default function Home() {
           <button onClick={sendMessage} disabled={isLoading} style={{ padding: "12px 24px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "6px", cursor: isLoading ? "not-allowed" : "pointer", fontWeight: "bold", fontSize: "16px" }}>
             發送
           </button>
-{/* 🧹 重新開課按鈕 (終極防死機版) */}
+{/* 🧹 重新開課按鈕 (連埋清除記憶功能) */}
           <button 
             type="button" 
             onClick={(e) => {
@@ -204,11 +204,12 @@ export default function Home() {
               setInput("");
               setImage(null);
               
-              // 🌟 2. 徹底洗走瀏覽器入面嘅舊記憶！
+              // 2. 徹底洗走瀏覽器入面嘅舊記憶！
               localStorage.setItem('chanSirChatLog', JSON.stringify(initialChat));
               
               alert("✅ 已經洗走哂記憶，重新開課！"); 
             }} 
+            style={{  // 🌟 就係頭先唔小心洗走咗呢一行呀！
               padding: "12px 16px", 
               marginLeft: "8px", 
               backgroundColor: "#ff4d4f", 
