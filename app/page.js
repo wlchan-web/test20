@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // 🌟 加入 useEffect
 
 // 🌟 新增嘅法寶：引入 Markdown 同 數學公式翻譯器
 import ReactMarkdown from 'react-markdown';
