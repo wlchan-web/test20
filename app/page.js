@@ -126,7 +126,7 @@ export default function Home() {
         {chatLog.map((msg, i) => (
           <div key={i} style={{ marginBottom: "15px", textAlign: msg.role === "user" ? "right" : "left" }}>
             <span style={{ display: "inline-block", padding: "15px", borderRadius: "8px", backgroundColor: msg.role === "user" ? "#007bff" : "#e9ecef", color: msg.role === "user" ? "white" : "black", maxWidth: "85%", textAlign: "left" }}>
-              <strong>{msg.role === "user" ? "你" : "阿 Sir"}: </strong><br/><br/>
+              <strong>{msg.role === "user" ? "你" : "陳 Sir"}: </strong><br/><br/>
               {msg.img && <img src={msg.img} alt="upload" style={{ maxWidth: "200px", display: "block", marginBottom: "8px", borderRadius: "4px" }} />}
               
               {/* 🌟 翻譯眼鏡發功區 🌟 */}
