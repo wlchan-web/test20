@@ -168,3 +168,13 @@ export default function Home() {
     </div>
   );
 }
+  const resetChat = () => {
+    // 1. 將對話紀錄洗牌，變返得最初陳 Sir 嘅開場白
+    setChatLog([
+      { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
+    ]);
+    // 2. 清空輸入框
+    setInput("");
+    // 3. 清空上傳咗嘅相片
+    setImage(null); 
+  };
