@@ -205,7 +205,28 @@ const [isLoading, setIsLoading] = useState(false);
         {chatLog.map((msg, i) => (
           <div key={i} style={{ marginBottom: "15px", textAlign: msg.role === "user" ? "right" : "left" }}>
             <span style={{ display: "inline-block", padding: "15px", borderRadius: "8px", backgroundColor: msg.role === "user" ? "#007bff" : "#e9ecef", color: msg.role === "user" ? "white" : "black", maxWidth: "85%", textAlign: "left" }}>
-              <strong>{msg.role === "user" ? "你" : "陳 Sir"}: </strong><br/><br/>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+  <strong>{msg.role === "user" ? "你" : "阿 Sir"}: </strong>
+  
+  {/* 🌟 新增：陳 Sir 朗讀掣 */}
+  {msg.role === "ai" && (
+    <button 
+      onClick={() => {
+        const synth = window.speechSynthesis;
+        // 清除 Markdown 符號 (例如 ** 或 #)，廢事佢讀埋出嚟
+        const cleanText = msg.text.replace(/[*#_`]/g, ''); 
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'zh-HK'; // 設定做廣東話
+        utterance.rate = 0.9; // 🌟 講慢少少，等學生聽得清楚
+        synth.speak(utterance);
+      }}
+      style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px" }}
+      title="讀畀我聽"
+    >
+      🔊
+    </button>
+  )}
+</div>
               {msg.img && <img src={msg.img} alt="upload" style={{ maxWidth: "200px", display: "block", marginBottom: "8px", borderRadius: "4px" }} />}
               
               {/* 🌟 翻譯眼鏡發功區 🌟 */}
