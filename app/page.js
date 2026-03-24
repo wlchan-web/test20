@@ -12,6 +12,27 @@ export default function Home() {
   const [image, setImage] = useState(null);
   const [chatLog, setChatLog] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false); // 🌟 新增：用嚟記住「讀取舊記憶」搞掂未
+
+  // 🌟 法寶 1：網頁一打開，即刻去 LocalStorage 摷返舊記憶出嚟
+  useEffect(() => {
+    const savedChat = localStorage.getItem('chanSirChatLog');
+    if (savedChat) {
+      try {
+        setChatLog(JSON.parse(savedChat));
+      } catch (error) {
+        console.error("讀取記憶失敗", error);
+      }
+    }
+    setIsLoaded(true); // 話畀系統知：舊記憶已經讀取完畢！
+  }, []);
+
+  // 🌟 法寶 2：每次 chatLog 有更新（阿 Sir 答完或者學生問完），即刻自動 Save 落 LocalStorage
+  useEffect(() => {
+    if (isLoaded) { // 確保讀取完舊記憶先好 Save，防止一開網頁就洗走咗啲舊資料
+      localStorage.setItem('chanSirChatLog', JSON.stringify(chatLog));
+    }
+  }, [chatLog, isLoaded]);
 
   // 🌟 進階版：自動壓縮圖片 Function
   const handleImageUpload = (e) => {
@@ -165,19 +186,23 @@ export default function Home() {
           </button>
 {/* 🧹 重新開課按鈕 (終極防死機版) */}
           <button 
-            type="button" // 🌟 關鍵 1：講明佢只係一個普通掣，唔好亂咁 Submit！
+            type="button" 
             onClick={(e) => {
-              e.preventDefault(); // 🌟 關鍵 2：截停所有預設動作
-              // 重新設定狀態
-              setChatLog([
+              e.preventDefault(); 
+              
+              // 1. 重新設定畫面狀態
+              const initialChat = [
                 { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
-              ]);
+              ];
+              setChatLog(initialChat);
               setInput("");
               setImage(null);
-              // 🌟 關鍵 3：彈個視窗確認真係撳到！(測試成功後可以刪除呢行)
-              alert("✅ 已經洗腦，重新開課！"); 
+              
+              // 🌟 2. 徹底洗走瀏覽器入面嘅舊記憶！
+              localStorage.setItem('chanSirChatLog', JSON.stringify(initialChat));
+              
+              alert("✅ 已經洗走哂記憶，重新開課！"); 
             }} 
-            style={{ 
               padding: "12px 16px", 
               marginLeft: "8px", 
               backgroundColor: "#ff4d4f", 
