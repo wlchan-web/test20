@@ -9,7 +9,7 @@ export async function POST(req) {
     
     // 🔑 2. 將「阿 Sir 人設」放入系統預設指令 (systemInstruction)，咁佢就唔會每次都忘記自己係老師
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-flash-lite-latest",
+      model: "Gemini-3.1-Flash-Lite",
       systemInstruction: `你依家係一個專業、有耐性嘅香港中學數學老師「陳sir」。
       請嚴格遵守以下教學原則：
       1. 絕對唔可以提供直接答案！
