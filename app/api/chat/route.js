@@ -7,9 +7,15 @@ export async function POST(req) {
     
     // 🌟 1. 定義你嘅「流水號」Model 陣列 (優先次序由上至下)
     const fallbackModels = [
-      "gemini-3.1-flash-lite", // 首選：500次免費配額，最快最輕
+      "gemini-3.1-flash-lite-preview", // 首選：500次免費配額，最快最輕
+      "gemini-flash-lite-latest", 
+      "gemini-flash-latest",
+      "gemini-3.1-pro-preview", 
+      "gemini-3-flash-preview",
+      "gemini-2.5-flash", 
+      "gemini-2.5-flash-lite",
       "gemini-1.5-flash",      // 次選：15 RPM，穩定可靠
-      "gemini-1.5-pro"         // 終極備用：算力最勁但最貴，非必要唔用
+      "gemini-1.5-pro",         // 終極備用：算力最勁但最貴，非必要唔用
     ];
 
     const formattedHistory = (history || []).map(msg => ({
