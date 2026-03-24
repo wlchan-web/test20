@@ -163,13 +163,24 @@ export default function Home() {
           <button onClick={sendMessage} disabled={isLoading} style={{ padding: "12px 24px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "6px", cursor: isLoading ? "not-allowed" : "pointer", fontWeight: "bold", fontSize: "16px" }}>
             發送
           </button>
-          {/* 🧹 重新開課按鈕 (紅色，以防撳錯) */}
+{/* 🧹 重新開課按鈕 (終極防死機版) */}
           <button 
-            onClick={resetChat} 
+            type="button" // 🌟 關鍵 1：講明佢只係一個普通掣，唔好亂咁 Submit！
+            onClick={(e) => {
+              e.preventDefault(); // 🌟 關鍵 2：截停所有預設動作
+              // 重新設定狀態
+              setChatLog([
+                { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
+              ]);
+              setInput("");
+              setImage(null);
+              // 🌟 關鍵 3：彈個視窗確認真係撳到！(測試成功後可以刪除呢行)
+              alert("✅ 已經洗腦，重新開課！"); 
+            }} 
             style={{ 
               padding: "12px 16px", 
               marginLeft: "8px", 
-              backgroundColor: "#ff4d4f", // 醒目嘅紅色
+              backgroundColor: "#ff4d4f", 
               color: "white", 
               border: "none", 
               borderRadius: "6px", 
@@ -185,13 +196,3 @@ export default function Home() {
     </div>
   );
 }
-  const resetChat = () => {
-    // 1. 將對話紀錄洗牌，變返得最初陳 Sir 嘅開場白
-    setChatLog([
-      { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
-    ]);
-    // 2. 清空輸入框
-    setInput("");
-    // 3. 清空上傳咗嘅相片
-    setImage(null); 
-  };
