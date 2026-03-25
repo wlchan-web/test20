@@ -335,8 +335,6 @@ const [isLoading, setIsLoading] = useState(false);
             onClick={sendMessage} 
             // ...你原本嘅 style...
           >
-            發送
-          </button>
 
           {/* 🔇 新增：叫陳 Sir 收聲掣 */}
           <button 
