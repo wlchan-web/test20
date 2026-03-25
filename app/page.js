@@ -294,31 +294,27 @@ const [isLoading, setIsLoading] = useState(false);
             {isListening ? "🛑 聽緊..." : "🎙️"}
           </button>
 
-          <button onClick={sendMessage} disabled={isLoading} style={{ padding: "12px 24px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "6px", cursor: isLoading ? "not-allowed" : "pointer", fontWeight: "bold", fontSize: "16px" }}>
+      {/* 1. 綠色發送掣 (保留你原本靚靚嗰個) */}
+          <button onClick={sendMessage} disabled={isLoading} style={{ padding: "12px 24px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "6px", cursor: isLoading ? "not-allowed" : "pointer", fontWeight: "bold", fontSize: "16px", flexShrink: 0 }}>
             發送
           </button>
-{/* 🧹 重新開課按鈕 (連埋清除記憶功能) */}
+
+          {/* 2. 🧹 重新開課按鈕 */}
           <button 
             type="button" 
             onClick={(e) => {
               e.preventDefault(); 
-              
-              // 1. 重新設定畫面狀態
               const initialChat = [
                 { role: "ai", text: "同學你好！我係 AI 陳 Sir 👨‍🏫 影低你唔識嘅數學題，或者直接打字問我啦！" }
               ];
               setChatLog(initialChat);
               setInput("");
               setImage(null);
-              
-              // 2. 徹底洗走瀏覽器入面嘅舊記憶！
               localStorage.setItem('chanSirChatLog', JSON.stringify(initialChat));
-              
               alert("✅ 已經洗走哂記憶，重新開課！"); 
             }} 
-            style={{  // 🌟 就係頭先唔小心洗走咗呢一行呀！
+            style={{ 
               padding: "12px 16px", 
-              marginLeft: "8px", 
               backgroundColor: "#ff4d4f", 
               color: "white", 
               border: "none", 
@@ -330,23 +326,19 @@ const [isLoading, setIsLoading] = useState(false);
           >
             🧹 重新開課
           </button>
-          {/* 呢個係你原本嘅發送掣 */}
-          <button 
-            onClick={sendMessage} 
-            // ...你原本嘅 style...
-          >
 
-          {/* 🔇 新增：叫陳 Sir 收聲掣 */}
+          {/* 3. 🔇 叫陳 Sir 收聲掣 */}
           <button 
             onClick={stopSpeech} 
             style={{ 
-              padding: "10px", 
+              padding: "12px 16px", 
               backgroundColor: "#ff4d4f", 
               color: "white", 
               border: "none", 
-              borderRadius: "5px", 
-              marginLeft: "10px",
-              cursor: "pointer"
+              borderRadius: "6px", 
+              cursor: "pointer",
+              fontWeight: "bold",
+              flexShrink: 0
             }}
           >
             🔇 暫停發聲
