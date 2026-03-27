@@ -193,7 +193,7 @@ const [isLoading, setIsLoading] = useState(false);
       {/* 頂部標題與頭像 */}
       <div style={{ display: "flex", alignItems: "center", gap: "15px", borderBottom: "2px solid #eee", paddingBottom: "15px", marginBottom: "20px" }}>
         <img 
-          src="https://api.dicebear.com/8.x/notionists/svg?seed=Chansir&backgroundColor=e2e8f0" 
+          src="/og-image.png" 
           alt="阿 Sir 頭像" 
           style={{ width: "70px", height: "70px", borderRadius: "50%", border: "2px solid #007bff", backgroundColor: "white", padding: "2px" }} 
         />
